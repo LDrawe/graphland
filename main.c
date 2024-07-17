@@ -6,14 +6,14 @@ int main() {
     FILE* arquivo = fopen("./dados.txt", "r");
 
     if (arquivo == NULL) {
-        perror("Erro: Não foi possível abrir o arquivo");
+        perror("Erro: Não foi possivel abrir o arquivo");
         exit(EXIT_FAILURE);
     }
 
     fscanf(arquivo, "%d\n %d", &numOfVertices, &numOfEstradas);
     
     if (numOfEstradas == 0){
-        printf("Necessário construir %d estrada(s)", numOfVertices - 1);
+        printf("Faltam %d estrada(s)", numOfVertices - 1);
         return 0;
     }
     
@@ -39,7 +39,7 @@ int main() {
         return 0;
     }
     
-    printf("Necessario construir %d estrada(s)\n", ilhas);
+    printf("Faltam %d estrada(s)\n", ilhas);
     
     free(grafo);
     free(visited);
