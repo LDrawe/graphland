@@ -40,8 +40,11 @@ int main() {
     }
     
     printf("Faltam %d estrada(s)\n", ilhas);
-    
+
+    for (int i = 0; i < numOfVertices; i++)
+        free(grafo[i]);
     free(grafo);
     free(visited);
+
     return 0;
 }

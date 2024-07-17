@@ -4,7 +4,7 @@
 int numOfVertices, numOfEstradas = 0;
 
 int** criaMatrizAdjacencia() {
-    int** matrizAdjacencia = (int**) malloc(numOfVertices * sizeof(int));
+    int** matrizAdjacencia = (int**) malloc(numOfVertices * sizeof(int*));
     for (int i = 0; i < numOfVertices; i++){
         matrizAdjacencia[i] = (int*) calloc(numOfVertices, sizeof(int)); // Calloc vai inicializar os elementos em 0;
     }
