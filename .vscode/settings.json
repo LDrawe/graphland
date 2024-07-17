@@ -4,6 +4,8 @@
         "string.h": "c",
         "stdio.h": "c",
         "stdbool.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "type_traits": "c",
+        "compare": "c"
     }
 }
