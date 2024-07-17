@@ -7,10 +7,9 @@ int main() {
 
     if (arquivo == NULL) {
         perror("Erro: Não foi possível abrir o arquivo");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
-    int numOfVertices, numOfEstradas = 0;
     fscanf(arquivo, "%d\n %d", &numOfVertices, &numOfEstradas);
     
     if (numOfEstradas == 0){
@@ -18,21 +17,23 @@ int main() {
         return 0;
     }
     
-    int** grafo = criaMatrizAdjacencia(numOfVertices);
-    preencheGrafo(numOfVertices, numOfEstradas, grafo, arquivo);
-
+    int** grafo = criaMatrizAdjacencia();
+    preencheGrafo(grafo, arquivo);
+    fclose(arquivo);
+    
     int* visited = (int*) calloc(numOfVertices, sizeof(int)); // Calloc vai inicializar os elementos em 0
     
     int islands = 1;
-    int unvisitedVertice = firstUnvisitedVertice(numOfVertices, visited);
+    int unvisitedVertice = firstUnvisitedVertice(visited);
 
     while (unvisitedVertice) {
-        dfs(unvisitedVertice, visited, numOfVertices, grafo, islands);
+        dfs(unvisitedVertice, grafo, visited, islands);
         islands++;
-        unvisitedVertice = firstUnvisitedVertice(numOfVertices, visited);
+        unvisitedVertice = firstUnvisitedVertice(visited);
     }
     
-    const int ilhas = getNumberOfDesconexos(numOfVertices, visited);
+    const int ilhas = getNumberOfDesconexos(visited);
+
     if (ilhas == 0) {
         printf("Promessa cumprida!\n");
         return 0;

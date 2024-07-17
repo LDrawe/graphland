@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include "utils.h"
 
-int** criaMatrizAdjacencia(int numOfVertices) {
+int numOfVertices, numOfEstradas = 0;
+
+int** criaMatrizAdjacencia() {
     int** matrizAdjacencia = (int**) malloc(numOfVertices * sizeof(int));
     for (int i = 0; i < numOfVertices; i++){
         matrizAdjacencia[i] = (int*) calloc(numOfVertices, sizeof(int)); // Calloc vai inicializar os elementos em 0;
@@ -9,7 +11,7 @@ int** criaMatrizAdjacencia(int numOfVertices) {
     return matrizAdjacencia;
 }
 
-int preencheGrafo(int numOfVertices, int numOfEstradas, int** matriz, FILE* arquivo) {
+int preencheGrafo(int** matriz, FILE* arquivo) {
     int vertice1, vertice2;
     for(int i = 0; i < numOfEstradas && !feof(arquivo); i++) {
         fscanf(arquivo, "%d %d", &vertice1, &vertice2);
@@ -21,21 +23,20 @@ int preencheGrafo(int numOfVertices, int numOfEstradas, int** matriz, FILE* arqu
         matriz[vertice1 - 1][vertice2 - 1] = 1;
         matriz[vertice2 - 1][vertice1 - 1] = 1;
     }
-    fclose(arquivo);
     return 0;
 }
 
-void dfs(int vertice, int numOfVertices,int** grafo, int* visited, int islandNumber) {
+void dfs(int vertice, int** grafo, int* visited, int islandNumber) {
     visited[vertice - 1] = islandNumber; // Marca o vértice como visitado
     for (int i = 0; i < numOfVertices; i++) {
         if (grafo[vertice - 1][i] == 1 && !visited[i]) {
-            dfs(++i, visited, numOfVertices, grafo, islandNumber);
+            dfs(++i, grafo, visited, islandNumber);
         }
     }
 }
 
 
-int getNumberOfDesconexos(int numOfVertices, int* visited) {
+int getNumberOfDesconexos(int* visited) {
     int unvisitedCount = 0;
     for (int i = 0; i < numOfVertices; i++) {
         if (visited[i] > unvisitedCount + 1) unvisitedCount++;
@@ -43,16 +44,17 @@ int getNumberOfDesconexos(int numOfVertices, int* visited) {
     return unvisitedCount;
 }
 
-int getFirstConnectedVertice(int numOfVertices, int** graph) {
+int getFirstConnectedVertice(int** graph) {
     for (int i = 0; i < numOfVertices; i++){
         for (int j = 0; j < numOfVertices; j++){
             if (graph[i][j] == 0 || i == j) continue;
             return ++i;
         }
     }
+    return 1;
 }
 
-int firstUnvisitedVertice(int numOfVertices, int* visited) {
+int firstUnvisitedVertice(int* visited) {
     for (int i = 0; i < numOfVertices; i++) {
         if (visited[i] == 0) {
             return ++i;
@@ -61,7 +63,7 @@ int firstUnvisitedVertice(int numOfVertices, int* visited) {
     return 0;
 }
 
-void imprimeMatriz(int numOfVertices, int** matriz) {
+void imprimeMatriz(int** matriz) {
     printf("Matriz de adjacencia:\n");
     for (int i = 0; i < numOfVertices; i++) {
         for (int j = 0; j < numOfVertices; j++) {
