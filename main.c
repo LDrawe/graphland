@@ -14,6 +14,7 @@ int main() {
     
     if (numOfEstradas == 0){
         printf("Faltam %d estrada(s)", numOfVertices - 1);
+        fclose(arquivo);
         return 0;
     }
     
