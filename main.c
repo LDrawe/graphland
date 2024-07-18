@@ -36,10 +36,9 @@ int main() {
 
     if (ilhas == 0) {
         printf("Promessa cumprida!\n");
-        return 0;
+    } else {
+        printf("Faltam %d estrada(s)\n", ilhas);
     }
-    
-    printf("Faltam %d estrada(s)\n", ilhas);
 
     for (int i = 0; i < numOfVertices; i++)
         free(grafo[i]);
