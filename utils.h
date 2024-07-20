@@ -6,10 +6,9 @@
 extern int numOfVertices, numOfEstradas;
 
 int** criaMatrizAdjacencia();
-int preencheGrafo(int** matriz, FILE* arquivo);
-void dfs(int vertice, int** grafo, int* visited, int islandNumber);
-int getNumberOfDesconexos(int* visited);
-int getFirstConnectedVertice(int** graph);
-int firstUnvisitedVertice(int* visited);
-void imprimeMatriz(int** matriz);
+int preencheGrafo(int** grafo, FILE* arquivo);
+void dfs(int vertice, int** grafo, int* visited, int index);
+int getNumberOfUnreachableVertices(int* visited);
+int getUnvisitedVertice(int* visited);
+void imprimeGrafo(int** grafo);
 #endif

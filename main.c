@@ -30,21 +30,20 @@ int main() {
     
     int* visited = (int*) calloc(numOfVertices, sizeof(int)); // Calloc vai inicializar os elementos em 0
     
-    int islands = 1;
-    int unvisitedVertice = firstUnvisitedVertice(visited);
+    int index, unvisitedVertice = 1;
 
     while (unvisitedVertice) {
-        dfs(unvisitedVertice, grafo, visited, islands);
-        islands++;
-        unvisitedVertice = firstUnvisitedVertice(visited);
+        dfs(unvisitedVertice, grafo, visited, index);
+        index++;
+        unvisitedVertice = getUnvisitedVertice(visited);
     }
     
-    const int ilhas = getNumberOfDesconexos(visited);
+    const int numberOfUnreachableVertices = getNumberOfUnreachableVertices(visited);
 
-    if (ilhas == 0) {
+    if (numberOfUnreachableVertices == 0) {
         printf("Promessa cumprida!\n");
     } else {
-        printf("Faltam %d estrada(s)\n", ilhas);
+        printf("Faltam %d estrada(s)\n", numberOfUnreachableVertices);
     }
 
     for (int i = 0; i < numOfVertices; i++)
