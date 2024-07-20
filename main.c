@@ -11,6 +11,12 @@ int main() {
     }
 
     fscanf(arquivo, "%d\n %d", &numOfVertices, &numOfEstradas);
+
+    if (numOfVertices < 2) {
+        printf("Erro: Quantidade insuficiente de vértices");
+        fclose(arquivo);
+        exit(EXIT_FAILURE);
+    }
     
     if (numOfEstradas == 0){
         printf("Faltam %d estrada(s)", numOfVertices - 1);
