@@ -19,7 +19,7 @@ int preencheGrafo(int** grafo, FILE* arquivo) {
 
         if (vertice1 > numOfVertices || vertice2 > numOfVertices){
             printf("Erro: Um ou mais vertices de numero maior que a quantidade total de vertices");
-            return 1;
+            exit(EXIT_FAILURE);
         }
         grafo[vertice1 - 1][vertice2 - 1] = 1;
         grafo[vertice2 - 1][vertice1 - 1] = 1;
@@ -36,7 +36,6 @@ void dfs(int vertice, int** grafo, int* visited, int index) {
     }
 }
 
-
 int getNumberOfUnreachableVertices(int* visited) {
     int unvisitedCount = 0;
     for (int i = 0; i < numOfVertices; i++) {
@@ -44,7 +43,6 @@ int getNumberOfUnreachableVertices(int* visited) {
     }
     return unvisitedCount;
 }
-
 
 int getUnvisitedVertice(int* visited) {
     for (int i = 0; i < numOfVertices; i++) {

@@ -11,4 +11,5 @@ void dfs(int vertice, int** grafo, int* visited, int index);
 int getNumberOfUnreachableVertices(int* visited);
 int getUnvisitedVertice(int* visited);
 void imprimeGrafo(int** grafo);
+
 #endif

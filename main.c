@@ -6,7 +6,7 @@ int main() {
     FILE* arquivo = fopen("./dados.txt", "r");
 
     if (arquivo == NULL) {
-        perror("Erro: Não foi possivel abrir o arquivo");
+        perror("Erro: Nao foi possivel abrir o arquivo");
         exit(EXIT_FAILURE);
     }
 
