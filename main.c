@@ -30,7 +30,8 @@ int main() {
     
     int* visited = (int*) calloc(numOfVertices, sizeof(int)); // Calloc vai inicializar os elementos em 0
     
-    int index, unvisitedVertice = 1;
+    int index = 1;
+    int unvisitedVertice = 1;
 
     while (unvisitedVertice) {
         dfs(unvisitedVertice, grafo, visited, index);
