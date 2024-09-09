@@ -2,14 +2,19 @@
 #define UTILS_H
 
 #include <stdio.h>
+#include <stdbool.h>
 
-extern int numOfVertices, numOfEstradas;
+typedef struct computer {
+    int xCoord, yCoord;
+} computer;
 
-int** criaMatrizAdjacencia();
-int preencheGrafo(int** grafo, FILE* arquivo);
-void dfs(int vertice, int** grafo, int* visited, int index);
-int getNumberOfUnreachableVertices(int* visited);
-int getUnvisitedVertice(int* visited);
-void imprimeGrafo(int** grafo);
+extern int numOfComputers;
+
+double** criaMatrizAdjacencia();
+void pegaCoordenadas(FILE* arquivo, double** grafo);
+int minKey(double* key, bool* mstSet);
+void primMST(double** grafo);
+void printMST(int* parent, double** grafo);
+void imprimeGrafo(double** grafo);
 
 #endif

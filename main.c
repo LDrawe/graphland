@@ -10,47 +10,23 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    fscanf(arquivo, "%d\n %d", &numOfVertices, &numOfEstradas);
+    fscanf(arquivo, "%d\n", &numOfComputers);
 
-    if (numOfVertices < 2) {
-        printf("Erro: Quantidade insuficiente de vértices");
+    if (numOfComputers < 2) {
+        printf("Erro: Quantidade insuficiente de computadores");
         fclose(arquivo);
         exit(EXIT_FAILURE);
     }
     
-    if (numOfEstradas == 0){
-        printf("Faltam %d estrada(s)", numOfVertices - 1);
-        fclose(arquivo);
-        return 0;
-    }
-    
-    int** grafo = criaMatrizAdjacencia();
-    preencheGrafo(grafo, arquivo);
+    double** grafo = criaMatrizAdjacencia();
+    pegaCoordenadas(arquivo, grafo);
     fclose(arquivo);
-    
-    int* visited = (int*) calloc(numOfVertices, sizeof(int)); // Calloc vai inicializar os elementos em 0
-    
-    int index = 1;
-    int unvisitedVertice = 1;
 
-    while (unvisitedVertice) {
-        dfs(unvisitedVertice, grafo, visited, index);
-        index++;
-        unvisitedVertice = getUnvisitedVertice(visited);
-    }
+    primMST(grafo);
     
-    const int numberOfUnreachableVertices = getNumberOfUnreachableVertices(visited);
-
-    if (numberOfUnreachableVertices == 0) {
-        printf("Promessa cumprida!\n");
-    } else {
-        printf("Faltam %d estrada(s)\n", numberOfUnreachableVertices);
-    }
-
-    for (int i = 0; i < numOfVertices; i++)
+    for (int i = 0; i < numOfComputers; i++)
         free(grafo[i]);
     free(grafo);
-    free(visited);
 
     return 0;
 }

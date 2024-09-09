@@ -1,63 +1,102 @@
 #include <stdlib.h>
+#include <math.h>
+#include <stdbool.h>
+#include <float.h>
 #include "utils.h"
 
-int numOfVertices, numOfEstradas = 0;
+int numOfComputers = 0;
 
-int** criaMatrizAdjacencia() {
-    int** matrizAdjacencia = (int**) malloc(numOfVertices * sizeof(int*));
+double** criaMatrizAdjacencia() {
+    double** matrizAdjacencia = (double**) malloc(numOfComputers * sizeof(double*));
 
-    for (int i = 0; i < numOfVertices; i++)
-        matrizAdjacencia[i] = (int*) calloc(numOfVertices, sizeof(int)); // Calloc vai inicializar os elementos em 0;
+    for (int i = 0; i < numOfComputers; i++)
+        matrizAdjacencia[i] = (double*) calloc(numOfComputers, sizeof(double)); // Calloc vai inicializar os elementos em 0;
     
     return matrizAdjacencia;
 }
 
-int preencheGrafo(int** grafo, FILE* arquivo) {
-    int vertice1, vertice2;
-    for(int i = 0; i < numOfEstradas && !feof(arquivo); i++) {
-        fscanf(arquivo, "%d %d", &vertice1, &vertice2);
+void pegaCoordenadas(FILE* arquivo, double** grafo) {
+    computer* vetorCoordenadas = (computer*) malloc(numOfComputers * sizeof(computer));
 
-        if (vertice1 > numOfVertices || vertice2 > numOfVertices){
-            printf("Erro: Um ou mais vertices de numero maior que a quantidade total de vertices");
+    for(int i = 0; i < numOfComputers && !feof(arquivo); i++) {
+        if(fscanf(arquivo, "%d %d", &vetorCoordenadas[i].xCoord, &vetorCoordenadas[i].yCoord) != 2) {
+            printf("Erro ao ler coordenadas.\n");
+            free(vetorCoordenadas);
             exit(EXIT_FAILURE);
         }
-        grafo[vertice1 - 1][vertice2 - 1] = 1;
-        grafo[vertice2 - 1][vertice1 - 1] = 1;
-    }
-    return 0;
-}
 
-void dfs(int vertice, int** grafo, int* visited, int index) {
-    visited[vertice - 1] = index; // Marca o vértice como visitado
-    for (int i = 0; i < numOfVertices; i++) {
-        if (grafo[vertice - 1][i] == 1 && !visited[i]) {
-            dfs(++i, grafo, visited, index);
+        for (int j = 0; j < i; j++)
+        {
+            if(i == j) continue;
+            double distancia = sqrt(pow(vetorCoordenadas[i].xCoord - vetorCoordenadas[j].xCoord, 2) + 
+                                    pow(vetorCoordenadas[i].yCoord - vetorCoordenadas[j].yCoord, 2));
+            grafo[i][j] = grafo[j][i] = distancia;
         }
     }
+    free(vetorCoordenadas);
 }
 
-int getNumberOfUnreachableVertices(int* visited) {
-    int unvisitedCount = 0;
-    for (int i = 0; i < numOfVertices; i++) {
-        if (visited[i] > unvisitedCount + 1) unvisitedCount++;
+// Função para encontrar o vértice com a menor chave que ainda não foi incluído na árvore geradora mínima
+int minKey(double* key, bool* mstSet) {
+    double min = DBL_MAX;
+    int min_index;
+
+    for (int v = 0; v < numOfComputers; v++)
+        if (mstSet[v] == false && key[v] < min)
+            min = key[v], min_index = v;
+
+    return min_index;
+}
+
+
+// Função que implementa o algoritmo de Prim para encontrar a árvore geradora mínima
+int* primMST(double** grafo) {
+    int* parent = (int*) malloc(numOfComputers * sizeof(int)); // Array para armazenar a árvore geradora mínima
+    double* key = (double*) malloc(numOfComputers * sizeof(double));  // Valores chave para escolher a aresta de menor peso
+    bool* mstSet = (bool*) malloc(numOfComputers * sizeof(bool)); // mstSet[i] será verdadeiro se o vértice i estiver incluído na árvore geradora mínima
+
+    // Inicializa as chaves como infinito e mstSet[] como falso
+    for (int i = 0; i < numOfComputers; i++)
+        key[i] = DBL_MAX, mstSet[i] = false;
+
+    // Começa pelo primeiro vértice, colocando sua chave como 0 para que seja escolhido primeiro
+    key[0] = 0;
+    parent[0] = -1; // O primeiro nó é a raiz da árvore geradora mínima
+
+    // A árvore geradora mínima terá V vértices
+    for (int count = 0; count < numOfComputers - 1; count++) {
+        // Escolhe o vértice com a menor chave que ainda não está na árvore geradora mínima
+        int u = minKey(key, mstSet);
+
+        // Adiciona o vértice escolhido ao conjunto da árvore geradora mínima
+        mstSet[u] = true;
+
+        // Atualiza os valores chave e o pai dos vértices adjacentes ao vértice escolhido
+        for (int v = 0; v < numOfComputers; v++)
+            // grafo[u][v] não é zero e o vértice v ainda não está na árvore geradora mínima
+            if (grafo[u][v] && mstSet[v] == false && grafo[u][v] < key[v])
+                parent[v] = u, key[v] = grafo[u][v];
     }
-    return unvisitedCount;
+    
+    printMST(parent, grafo);
+    free(key);
+    free(mstSet);
+
+    return parent;
 }
 
-int getUnvisitedVertice(int* visited) {
-    for (int i = 0; i < numOfVertices; i++) {
-        if (visited[i] == 0) {
-            return ++i; // Vamos trabalhar com os vértices usando 1 based index
-        }
-    }
-    return 0; // Se todos os vértices foram visitados, retornamos 0 que não remete a nenhum vértice
+// Função para imprimir a árvore geradora mínima
+void printMST(int* parent, double** grafo) {
+    printf("Aresta   Peso\n");
+    for (int i = 1; i < numOfComputers; i++)
+        printf("%d - %d    %.2f \n", parent[i] + 1, i + 1, grafo[i][parent[i]]);
 }
 
-void imprimeGrafo(int** grafo) {
+void imprimeGrafo(double** grafo) {
     printf("Grafo:\n");
-    for (int i = 0; i < numOfVertices; i++) {
-        for (int j = 0; j < numOfVertices; j++) {
-            printf("%d ", grafo[i][j]);
+    for (int i = 0; i < numOfComputers; i++) {
+        for (int j = 0; j < numOfComputers; j++) {
+            printf("%.2f ", grafo[i][j]);
         }
         printf("\n");
     }
