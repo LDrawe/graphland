@@ -96,12 +96,12 @@ int *prim(double **grafo)
 // Função para imprimir a resposta
 void printArvore(int *arvoreGeradora, double **grafo)
 {
-    printf("Aresta   Peso\n");
+    printf("PCs      Distancia\n");
     double soma = 0.0;
 
     for (int i = 1; i < numOfComputers; i++)
     {
-        printf("%d - %d    %.2f \n", arvoreGeradora[i] + 1, i + 1, grafo[i][arvoreGeradora[i]]);
+        printf("%d - %d    %.2f Metros\n", arvoreGeradora[i] + 1, i + 1, grafo[i][arvoreGeradora[i]]);
         soma += grafo[i][arvoreGeradora[i]];
     }
 
