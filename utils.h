@@ -4,17 +4,18 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-typedef struct computer {
+typedef struct computer
+{
     int xCoord, yCoord;
 } computer;
 
 extern int numOfComputers;
 
-double** criaMatrizAdjacencia();
-void pegaCoordenadas(FILE* arquivo, double** grafo);
-int minKey(double* key, bool* mstSet);
-void primMST(double** grafo);
-void printMST(int* parent, double** grafo);
-void imprimeGrafo(double** grafo);
+double **criaMatrizAdjacencia();
+void pegaCoordenadas(FILE *arquivo, double **grafo);
+int pegaVerticeMenorCusto(double *key, bool *mstSet);
+int *prim(double **grafo);
+void printArvore(int *parent, double **grafo);
+void imprimeGrafo(double **grafo);
 
 #endif
